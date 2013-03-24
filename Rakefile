@@ -1,3 +1,5 @@
+require 'rubygems'
+
 VERSION  = '0.0.1'
 TOPLEVEL = File.dirname(__FILE__)
 NAME     = File.basename TOPLEVEL
@@ -7,11 +9,12 @@ DESTDIR  = ENV['DESTDIR']
 
 task :default => [:test]
 
-IO.popen('gem contents provider-testing').each do |l|
-  if l =~ %r{template/Rakefile}
-    Dir[File.join(File.dirname(l), "tasks", "**", "*.rake")].each { |t| load t }
-    break
-  end
-end
+
+spec = Gem::Specification.find_by_name("provider-testing")
+gem_lib = File.join(spec.gem_dir, "lib")
+$LOAD_PATH.unshift(gem_lib)
+ENV['TOPLEVEL'] = TOPLEVEL
+
+Dir[File.join(gem_lib, "tasks", "**", "*.rake")].each { |t| load t }
 
 Dir['tasks/**/*.rake'].each { |t| load t }
