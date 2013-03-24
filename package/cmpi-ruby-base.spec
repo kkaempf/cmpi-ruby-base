@@ -30,6 +30,8 @@ Requires:       cmpi-bindings-ruby
 Requires:       cim-server
 PreReq:         cmpi-provider-register
 BuildRequires:  sblim-sfcb
+BuildRequires:  ruby
+BuildRequires:  rake
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
 %define mofdir /usr/share/mof/%{name}
@@ -45,7 +47,7 @@ Set of CIM providers modeling base CIs of a Linux system
 %build
 
 %install
-make install DESTDIR=%{buildroot}
+rake install DESTDIR=%{buildroot}
 
 %pre
 if [ $1 -gt 1 ]; then
