@@ -5,15 +5,15 @@
 require 'rubygems'
 require 'sfcc'
 require 'test/unit'
-require 'provider-testing/helper'
+require 'provider-testing'
 
 class Test_RCP_BaseProvider < Test::Unit::TestCase
   def setup
-    @client, @op = ProviderTesting::Helper.setup 'RCP_ComputerSystem', 'test/test'
+    @client, @op = ProviderTesting.setup 'RCP_ComputerSystem', 'test/test'
   end
 
   def teardown
-    ProviderTesting::Helper.teardown
+    ProviderTesting.teardown
   end
 
   def test_registered
