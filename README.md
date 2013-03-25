@@ -5,7 +5,7 @@ that stuff
 
 ## Author
 
-Klaus Kämpf <kkaempf@suse.de>
+Copyright (c) 2013 Klaus Kämpf <kkaempf@suse.de>
 
 ## License
 
