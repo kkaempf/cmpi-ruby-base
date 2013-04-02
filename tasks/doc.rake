@@ -9,6 +9,6 @@ rescue LoadError
   require 'rdoc/task'
   Rake::RDocTask.new(:doc) do |rdoc|
     rdoc.rdoc_dir = "doc"
-    rdoc.title = "dm-keeper-adapter #{CIM::VERSION}"
+    rdoc.title = "cmpi-ruby-base #{VERSION}"
   end
 end
