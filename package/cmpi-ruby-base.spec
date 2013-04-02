@@ -27,15 +27,17 @@ Release:        2
 Summary:        Base CMPI CIM providers
 Source0:        %{name}-%{version}.tar.bz2
 Requires:       cmpi-bindings-ruby
-Requires:       cim-server
-PreReq:         cmpi-provider-register
+Requires:       sblim-sfcb
+PreReq:         sblim-sfcb
 BuildRequires:  sblim-sfcb
 BuildRequires:  ruby
-BuildRequires:  rake
+BuildRequires:  rubygem(provider-testing)
+BuildRequires:  rubygem(cim) 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
 %define mofdir /usr/share/mof/%{name}
 %define cmpidir /usr/share/cmpi
+%define namespace root/suse
 
 %description
 Set of CIM providers modeling base CIs of a Linux system
@@ -48,19 +50,36 @@ Set of CIM providers modeling base CIs of a Linux system
 
 %install
 rake install DESTDIR=%{buildroot}
-
+  
 %pre
 if [ $1 -gt 1 ]; then
- /usr/sbin/cmpi-provider-register -r -x -d %{mofdir}
+  if [ -d %{mofdir} ]; then
+    for i in %{mofdir}/*.reg
+    do
+      j=`basename $i`
+      sfcbunstage -n %{namespace} -r $j `basename $j .reg`.mof
+    done
+  fi
 fi
 
 %post
-/usr/sbin/cmpi-provider-register -d %{mofdir}
+for i in %{mofdir}/*.reg
+do
+  sfcbstage -n %{namespace} -r $i %{mofdir}/`basename $i .reg`.mof
+done
+sfcbrepos -f 
 
 %preun
 if [ "$1" = "0" ] ; then
- /usr/sbin/cmpi-provider-register -r -d %{mofdir}
-fi 
+  if [ -d %{mofdir} ]; then
+    for i in %{mofdir}/*.reg
+    do
+      j=`basename $i`
+      sfcbunstage -n %{namespace} -r $j `basename $j .reg`.mof
+    done
+    sfcbrepos -f 
+  fi
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT

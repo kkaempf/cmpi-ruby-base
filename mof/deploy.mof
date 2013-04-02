@@ -1,8 +1,0 @@
-#pragma namespace ("root/suse")
-#pragma include ("RCP_ComputerSystem.mof")
-#pragma include ("RCP_OperatingSystem.mof")
-#pragma include ("RCP_OSProcess.mof")
-#pragma include ("RCP_PhysicalMemory.mof")
-#pragma include ("RCP_Processor.mof")
-#pragma include ("RCP_RunningOS.mof")
-#pragma include ("RCP_UnixProcess.mof")
