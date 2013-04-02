@@ -60,7 +60,8 @@ module Cmpi
 	      result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_Processor"
 	    end
 	    result.SystemCreationClassName = "RCP_Processor"
-	    result.SystemName = Socket.gethostbyname(Socket.gethostname).first
+            # this fails if hostname can't be resolved 
+	    result.SystemName = Socket.gethostbyname(Socket.gethostname).first rescue ""
 	    result.CreationClassName = result.SystemCreationClassName
 	    result.DeviceID = v
 	    next_cpu = true
