@@ -1,5 +1,5 @@
 [RCP_RunningOS]
   location: rbCmpiProvider
   provider: RCP_RunningOS
-  type: instance method
+  type: instance method association
   namespace: root/suse

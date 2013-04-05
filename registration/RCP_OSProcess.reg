@@ -2,4 +2,4 @@
   location: rbCmpiProvider
   provider: RCP_OSProcess
   type: instance association
-  namespace: root/suse
+  namespace: test/test
