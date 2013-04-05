@@ -1,5 +1,5 @@
 #
-# spec file for package cmpi-ruby-base (Version 0.0.1)
+# spec file for package cmpi-ruby-base (Version 0.1.0)
 #
 # Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
