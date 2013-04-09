@@ -21,7 +21,7 @@ module Cmpi
     def each( reference, properties = nil, want_instance = false )
       dmi = {}
       if want_instance
-	IO.popen("dmidecode -t processor") do |f|
+	IO.popen("/usr/sbin/dmidecode -t processor") do |f|
 	  k = nil
 	  while l = f.gets
 	    if l =~ /^\s*([^:]+):\s*(.*)\s*$/
@@ -196,6 +196,14 @@ module Cmpi
     # lang : String
     def exec_query( context, result, reference, query, lang )
       @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
+      keys = [ "SystemCreationClassName", "SystemName", "CreationClassName", "DeviceID" ]                                                                 
+      expr = CMPISelectExp.new query, lang, keys
+      each(context, reference, nil, true) do |instance|
+        if expr.match(instance)
+          instance.set_property_filter expr.filter
+          result.return_instance instance
+        end
+      end
       result.done
       true
     end

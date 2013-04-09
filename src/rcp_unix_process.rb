@@ -258,6 +258,14 @@ module Cmpi
     # lang : String
     def exec_query( context, result, reference, query, lang )
       @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
+      keys = [ "CSCreationClassName", "CSName", "CreationClassName", "Handle", "OSCreationClassName", "OSName" ]
+      expr = CMPISelectExp.new query, lang, keys
+      each(context, reference, nil, true) do |instance|
+        if expr.match(instance)
+          instance.set_property_filter expr.filter
+          result.return_instance instance
+        end
+      end
       result.done
       true
     end

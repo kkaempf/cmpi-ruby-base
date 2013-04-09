@@ -77,7 +77,7 @@ module Cmpi
     private
     def each_dmi
       memory_device = nil
-      IO.popen("dmidecode -t memory") do |f|
+      IO.popen("/usr/sbin/dmidecode -t memory") do |f|
 	while l = f.gets
 	  if l =~ /^Memory Device/
 	    yield memory_device if memory_device
@@ -208,6 +208,22 @@ module Cmpi
         @trace_file.puts "instance #{instance}"
         result.return_instance instance
         break # only return first instance
+      end
+      result.done
+      true
+    end
+   
+    # query : String
+    # lang : String
+    def exec_query( context, result, reference, query, lang )
+      @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
+      keys = [ "CreationClassName", "Tag" ]
+      expr = CMPISelectExp.new query, lang, keys
+      each(context, reference, nil, true) do |instance|
+        if expr.match(instance)
+          instance.set_property_filter expr.filter
+          result.return_instance instance
+        end
       end
       result.done
       true

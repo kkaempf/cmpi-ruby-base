@@ -116,16 +116,6 @@ module Cmpi
       true
     end
    
-    # Instance
-
-    def create_instance( context, result, reference, newinst )
-      @trace_file.puts "create_instance ref #{reference}, newinst #{newinst.inspect}"
-      # RCP_OSProcess.new reference, newinst
-      # result.return_objectpath reference
-      # result.done
-      # true
-    end
-   
     def enum_instance_names( context, result, reference )
       @trace_file.puts "enum_instance_names ref #{reference}"
       each(context, reference) do |ref|
@@ -154,28 +144,5 @@ module Cmpi
       true
     end
    
-    def set_instance( context, result, reference, newinst, properties )
-      @trace_file.puts "set_instance ref #{reference}, newinst #{newinst.inspect}, props #{properties.inspect}"
-      properties.each do |prop|
-        newinst.send "#{prop.name}=".to_sym, FIXME
-      end
-      result.return_instance newinst
-      result.done
-      true
-    end
-   
-    def delete_instance( context, result, reference )
-      @trace_file.puts "delete_instance ref #{reference}"
-      result.done
-      true
-    end
-   
-    # query : String
-    # lang : String
-    def exec_query( context, result, reference, query, lang )
-      @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
-      result.done
-      true
-    end
   end
 end

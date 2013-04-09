@@ -92,7 +92,7 @@ module Cmpi
       result.done
       true
     end
-   
+
     def enum_instance_names( context, result, reference )
       @trace_file.puts "enum_instance_names ref #{reference}"
       each(context, reference) do |ref|
@@ -121,13 +121,5 @@ module Cmpi
       true
     end
 
-    # query : String
-    # lang : String
-    def exec_query( context, result, reference, query, lang )
-      @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
-      result.done
-      true
-    end
-   
   end
 end
