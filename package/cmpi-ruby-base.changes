@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr  9 14:03:29 UTC 2013 - kkaempf@suse.com
+
+- update to 0.2.0
+  implement execQuery
+
+-------------------------------------------------------------------
 Tue Apr  2 20:05:48 UTC 2013 - kkaempf@suse.com
 
 - Initial version 0.1.0, for sblim-sfcb only

@@ -70,7 +70,13 @@ module Cmpi
 	  if next_cpu
 	    result.Role = dmi["Type"]
 	    result.UpgradeMethod = UpgradeMethod.send(dmi["Upgrade"].to_sym)
-	    result.Family = Family.send(dmi["Version"].to_sym)
+            fam = Family.send(dmi["Version"].to_sym)
+            if fam
+              result.Family = fam
+            else
+              result.Family = Family.send(:Other)
+              result.OtherFamilyDescription = dmi["Version"]
+            end
 	    result.MaxClockSpeed = dmi["Max Speed"]
 	    datawidth = (['a'].pack('P').length  > 4) ? 64 : 32
 	    result.DataWidth = datawidth
@@ -89,7 +95,6 @@ module Cmpi
 	    result.HealthState = HealthState.OK
 	    result.PrimaryStatus = PrimaryStatus.OK
 	    result.Caption = dmi["Type"]
-
 	    next_cpu = false
 	  end # next_cpu
 	 
@@ -120,7 +125,7 @@ module Cmpi
 	    result.Characteristics = characteristics
 	    result.PowerManagementSupported = characteristics.include? 7
 	  when /model name/
-	    result.Name = v
+	    result.Name = "Processor#{result.DeviceID}"
 	    result.Description = v
 	   
 	  # result.EnabledProcessorCharacteristics = [EnabledProcessorCharacteristics.Unknown] # uint16[] (-> CIM_Processor)
