@@ -5,6 +5,8 @@ require 'syslog'
 
 require 'cmpi/provider'
 
+require "rcp_unix_process"
+
 module Cmpi
   #
   # Realisation of CIM_OSProcess in Ruby
@@ -49,31 +51,28 @@ module Cmpi
       upref = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_UnixProcess"
       refclass = reference.classname
       if refclass == "RCP_ComputerSystem"
-	upref.CSCreationClassName = reference.classname
+	upref.CSCreationClassName = refclass
 	upref.CSName = reference.Name     
       elsif refclass == "RCP_OperatingSystem"
-	upref.OSCreationClassName = reference.classname
+	upref.OSCreationClassName = refclass
 	upref.OSName = reference.Name
 	os_ref = reference
       elsif refclass != "RCP_OSProcess"
-	STDERR.puts "RCP_OSProcess does not serve #{reference}"
+	@trace_file.puts "*** RCP_OSProcess does not serve #{reference}"
 	return # not for this class
       end
+      
       unless os_ref
 	os_ref = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_OperatingSystem"
 	enum = Cmpi.broker.enumInstanceNames context, os_ref
 	os_ref = enum.next_element
       end
-
       enum = Cmpi.broker.enumInstanceNames context, upref
       enum.each do |res|
+        result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_OSProcess"
 	if want_instance
-	  result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_OSProcess"
 	  result = Cmpi::CMPIInstance.new result
-	else
-	  result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_OSProcess"
 	end
-     
 	# Set key properties
 	result.GroupComponent = os_ref # CIM_OperatingSystem
 	result.PartComponent = res # CIM_Process
