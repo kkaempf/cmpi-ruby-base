@@ -9,7 +9,9 @@ module Cmpi
   #
   # Realisation of CIM_ComputerSystem in Ruby
   #
-  class RCP_ComputerSystem < InstanceProvider
+  class RCP_ComputerSystem < MethodProvider
+    
+    include InstanceProviderIF
    
     private
     #
@@ -72,14 +74,57 @@ module Cmpi
       # result.ElementName = nil # string (-> CIM_ManagedElement)
       yield result
     end
+
     public
    
     #
     # Provider initialization
     #
-    def initialize( name, broker, context )     
+    def initialize( name, broker, context )
       @trace_file = STDERR
       super broker
+    end
+    
+    def cleanup( context, terminating )
+      @trace_file.puts "RCP_ComputerSystem.cleanup terminating? #{terminating}"
+      true
+    end
+    
+    def self.typemap
+      {
+        "NameFormat" => Cmpi::string,
+        "Dedicated" => Cmpi::uint16A,
+        "OtherDedicatedDescriptions" => Cmpi::stringA,
+        "ResetCapability" => Cmpi::uint16,
+        "PowerManagementCapabilities" => Cmpi::uint16A,
+        "CreationClassName" => Cmpi::string,
+        "Name" => Cmpi::string,
+        "PrimaryOwnerName" => Cmpi::string,
+        "PrimaryOwnerContact" => Cmpi::string,
+        "Roles" => Cmpi::stringA,
+        "OtherIdentifyingInfo" => Cmpi::stringA,
+        "IdentifyingDescriptions" => Cmpi::stringA,
+        "EnabledState" => Cmpi::uint16,
+        "OtherEnabledState" => Cmpi::string,
+        "RequestedState" => Cmpi::uint16,
+        "EnabledDefault" => Cmpi::uint16,
+        "TimeOfLastStateChange" => Cmpi::dateTime,
+        "AvailableRequestedStates" => Cmpi::uint16A,
+        "TransitioningToState" => Cmpi::uint16,
+        "InstallDate" => Cmpi::dateTime,
+        "OperationalStatus" => Cmpi::uint16A,
+        "StatusDescriptions" => Cmpi::stringA,
+        "Status" => Cmpi::string,
+        "HealthState" => Cmpi::uint16,
+        "CommunicationStatus" => Cmpi::uint16,
+        "DetailedStatus" => Cmpi::uint16,
+        "OperatingStatus" => Cmpi::uint16,
+        "PrimaryStatus" => Cmpi::uint16,
+        "InstanceID" => Cmpi::string,
+        "Caption" => Cmpi::string,
+        "Description" => Cmpi::string,
+        "ElementName" => Cmpi::string,
+      }
     end
    
     # Methods
@@ -162,50 +207,7 @@ module Cmpi
       result.done
       true
     end
-   
-    def cleanup( context, terminating )
-      @trace_file.puts "cleanup terminating? #{terminating}"
-      true
-    end
-   
-    def self.typemap
-      {
-        "NameFormat" => Cmpi::string,
-        "Dedicated" => Cmpi::uint16A,
-        "OtherDedicatedDescriptions" => Cmpi::stringA,
-        "ResetCapability" => Cmpi::uint16,
-        "PowerManagementCapabilities" => Cmpi::uint16A,
-        "CreationClassName" => Cmpi::string,
-        "Name" => Cmpi::string,
-        "PrimaryOwnerName" => Cmpi::string,
-        "PrimaryOwnerContact" => Cmpi::string,
-        "Roles" => Cmpi::stringA,
-        "OtherIdentifyingInfo" => Cmpi::stringA,
-        "IdentifyingDescriptions" => Cmpi::stringA,
-        "EnabledState" => Cmpi::uint16,
-        "OtherEnabledState" => Cmpi::string,
-        "RequestedState" => Cmpi::uint16,
-        "EnabledDefault" => Cmpi::uint16,
-        "TimeOfLastStateChange" => Cmpi::dateTime,
-        "AvailableRequestedStates" => Cmpi::uint16A,
-        "TransitioningToState" => Cmpi::uint16,
-        "InstallDate" => Cmpi::dateTime,
-        "OperationalStatus" => Cmpi::uint16A,
-        "StatusDescriptions" => Cmpi::stringA,
-        "Status" => Cmpi::string,
-        "HealthState" => Cmpi::uint16,
-        "CommunicationStatus" => Cmpi::uint16,
-        "DetailedStatus" => Cmpi::uint16,
-        "OperatingStatus" => Cmpi::uint16,
-        "PrimaryStatus" => Cmpi::uint16,
-        "InstanceID" => Cmpi::string,
-        "Caption" => Cmpi::string,
-        "Description" => Cmpi::string,
-        "ElementName" => Cmpi::string,
-      }
-    end
-   
-   
+ 
     class NameFormat < Cmpi::ValueMap
       def self.map
         {
