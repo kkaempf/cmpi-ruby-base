@@ -17,7 +17,7 @@ module Cmpi
     #  yields references matching reference and properties
     #
     def each( context, reference, properties = nil, want_instance = false )
-#      STDERR.puts "Each ref #{reference}, prop #{properties}, inst #{want_instance}"
+#      @trace_file.puts "RCP_UnixProcess.each ref #{reference}, prop #{properties}, inst #{want_instance}"
       cs_CreationClassName = reference.CSCreationClassName
       cs_Name = reference.CSName
       unless cs_CreationClassName && cs_Name
@@ -39,17 +39,15 @@ module Cmpi
       pid = (reference.Handle rescue nil) || "[0-9]*"
       Dir["/proc/#{pid}"].each do |proc|
 	pid = proc[6..-1]
+        result = Cmpi::CMPIObjectPath.new reference
 	if want_instance
-	  result = Cmpi::CMPIObjectPath.new reference.namespace, reference.classname
 	  result = Cmpi::CMPIInstance.new result
-	else
-	  result = Cmpi::CMPIObjectPath.new reference
 	end
-
         # Set key properties
  
-        result.CSCreationClassName = cs_CreationClassName
-	result.CSName = cs_Name
+        # already set via reference
+        # result.CSCreationClassName = cs_CreationClassName
+ 	# result.CSName = cs_Name
  
         result.OSCreationClassName = os_CreationClassName
         result.OSName = os_Name
