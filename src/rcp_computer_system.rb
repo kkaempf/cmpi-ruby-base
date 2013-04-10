@@ -22,10 +22,14 @@ module Cmpi
       result = Cmpi::CMPIObjectPath.new reference.namespace, reference.classname
       if want_instance
 	result = Cmpi::CMPIInstance.new result
+        if properties
+          @trace_file.puts "set_property_filter #{properties.inspect}"
+          result.set_property_filter properties
+        end
       end
 
       # Set key properties
-     
+
       result.CreationClassName = "RCP_ComputerSystem" # string (-> CIM_System)
       result.Name = "hostname" #Socket.gethostbyname(Socket.gethostname).first
       unless want_instance
@@ -149,9 +153,9 @@ module Cmpi
       @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
       keys = [ "CreationClassName", "Name" ]
       expr = CMPISelectExp.new query, lang, keys
-      each(context, reference, nil, true) do |instance|
+      @trace_file.puts "exec_query filter #{expr.filter.inspect}"
+      each(reference, expr.filter, true) do |instance|
         if expr.match(instance)
-          instance.set_property_filter expr.filter
           result.return_instance instance
         end
       end

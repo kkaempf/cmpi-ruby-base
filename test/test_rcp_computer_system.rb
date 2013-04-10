@@ -38,4 +38,20 @@ class Test_RCP_BaseProvider < Test::Unit::TestCase
     end
   end
 
+  def test_exec_query
+    query = "select OperationalStatus from #{@op.classname}"
+    puts "Query '#{query}'"
+    result = @client.query(@op, query, "WQL")
+    assert result
+    assert_kind_of Sfcc::Cim::Enumeration, result
+    result.each do |instance|
+      assert instance
+      assert_kind_of Sfcc::Cim::Instance, instance
+      assert_equal @op.classname, instance.classname
+      puts "instance.OperationalStatus #{instance.OperationalStatus.inspect}"
+      assert instance.OperationalStatus # this property should be set
+      puts "instance.NameFormat #{instance.NameFormat.inspect}"
+      assert_nil instance.NameFormat # this property shouldn't be set
+    end
+  end
 end
