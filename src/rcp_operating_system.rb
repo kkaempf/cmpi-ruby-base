@@ -39,31 +39,65 @@ module Cmpi
       result.CSCreationClassName = cs_CreationClassName # string MaxLen 256 (-> CIM_OperatingSystem)
       result.CSName = cs_Name # string MaxLen 256 (-> CIM_OperatingSystem)
       result.CreationClassName = "RCP_OperatingSystem" # string MaxLen 256 (-> CIM_OperatingSystem)
-      releasefile = Dir["/etc/*-release"].first
-      release = File.read(releasefile).split("\n") rescue nil
-      result.Name = release.first if release # string MaxLen 256 (-> CIM_OperatingSystem)
+      osname = nil
+      version = nil
+      release = nil
+      releasefile = nil
+      begin
+        data = File.read("/etc/SuSE-release").split("\n")
+        releasefile = "/etc/SuSE-release"
+        osname = data.first
+        data.each do |l|
+          l.chomp!
+          if l =~ /^VERSION\s*=\s*(.*)$/
+            version = $1
+          end
+          if l =~ /^PATCHLEVEL\s*=\s*(.*)$/
+            release = $1
+          end
+        end
+      rescue
+        @trace_file.puts "no SuSE-release"        
+        begin
+          data = {}
+          File.read("/etc/os-release").split("\n").each do |l|
+            l.chomp!
+            if l =~ /^([^=]+)=\"?([^\"]*)\"?$/
+              data[$1] = $2
+            end
+          end
+          releasefile = "/etc/os-release"
+          osname = data["PRETTY_NAME"] || data["NAME"] || data["CPE_NAME"]
+          version = data["VERSION_ID"]
+        rescue
+          @trace_file.puts "no os-release"        
+        end
+      end
+      if osname
+        result.Name = osname # string MaxLen 256 (-> CIM_OperatingSystem)
+      else
+        raise "Cannot determine OS name"
+      end
       unless want_instance
         yield result
         return
       end
      
       # Instance: Set non-key properties
-      result.OSType = case release.first
+      result.OSType = case osname
       when /openSUSE.*64/ then OSType.send("SUSE 64-Bit")
       when /openSUSE/ then OSType.send("SUSE")
       when /SLES.*64/ then OSType.send("SLES 64-Bit")
       when /SLES/ then OSType.send("SLES")     
       else
-	result.OtherTypeDescription = release
+	result.OtherTypeDescription = osname
         OSType.Other
       end
      
       #  # uint16  (-> CIM_OperatingSystem)
-      release.each do |l|
-	if l =~ /VERSION\s*=\s*([^\n]*)/
-	  result.Version = $1.strip
-	  break
-	end
+      if version
+        version << ".#{release}" if release
+        result.Version = version
       end
       uptime_in_secs = File.read('/proc/uptime').match(/^(\d+\.\d+) /)[1].to_i
       time = Time.new
