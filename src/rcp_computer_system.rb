@@ -140,7 +140,7 @@ module Cmpi
     # Storage).
     #
     def set_power_state( context, reference, power_state, time )
-      @trace_file.puts "set_power_state #{context}, #{reference}, #{power_state}, #{time}"
+      @trace_file.puts "RCP_ComputerSystem.set_power_state #{context}, #{reference}, #{power_state}, #{time}"
       result = 12345 # uint32
       #  function body goes here
       return result
@@ -154,7 +154,7 @@ module Cmpi
     # ServiceAccessPoint.
     #
     def request_state_change( context, reference, requested_state, timeout_period )
-      @trace_file.puts "request_state_change #{context}, #{reference}, #{requested_state}, #{timeout_period}"
+      @trace_file.puts "RCP_ComputerSystem.request_state_change #{context}, #{reference}, #{requested_state}, #{timeout_period}"
       result = 42 # uint32
       job = Cmpi::CMPIObjectPath.new reference.namespace, "CIM_ConcreteJob" # CIM_ConcreteJob ref
       #  function body goes here
@@ -162,9 +162,9 @@ module Cmpi
     end
      
     def enum_instance_names( context, result, reference )
-      @trace_file.puts "enum_instance_names ref #{reference}"
+      @trace_file.puts "RCP_ComputerSystem.enum_instance_names ref #{reference}"
       each(reference) do |ref|
-        @trace_file.puts "ref #{ref}"
+        @trace_file.puts "RCP_ComputerSystem.enum_instance_names returns #{ref}"
         result.return_objectpath ref
       end
       result.done
@@ -174,7 +174,7 @@ module Cmpi
     def enum_instances( context, result, reference, properties )
       @trace_file.puts "enum_instances ref #{reference}, props #{properties.inspect}"
       each(reference, properties, true) do |instance|
-        @trace_file.puts "instance #{instance}"
+        @trace_file.puts "RCP_ComputerSystem.enum_instances returns #{instance}"
         result.return_instance instance
       end
       result.done
@@ -184,7 +184,7 @@ module Cmpi
     def get_instance( context, result, reference, properties )
       @trace_file.puts "get_instance ref #{reference}, props #{properties.inspect}"
       each(reference, properties, true) do |instance|
-        @trace_file.puts "instance #{instance}"
+        @trace_file.puts "RCP_ComputerSystem.get_instance returns #{instance}"
         result.return_instance instance
         break # only return first instance
       end
@@ -195,10 +195,9 @@ module Cmpi
     # query : String
     # lang : String
     def exec_query( context, result, reference, query, lang )
-      @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
+      @trace_file.puts "RCP_ComputerSystem.exec_query ref #{reference}, query #{query}, lang #{lang}"
       keys = [ "CreationClassName", "Name" ]
       expr = CMPISelectExp.new query, lang, keys
-      @trace_file.puts "exec_query filter #{expr.filter.inspect}"
       each(reference, expr.filter, true) do |instance|
         if expr.match(instance)
           result.return_instance instance

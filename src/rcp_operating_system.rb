@@ -187,7 +187,7 @@ module Cmpi
     def enum_instance_names( context, result, reference )
       @trace_file.puts "enum_instance_names ref #{reference}"
       each(context, reference) do |ref|
-        @trace_file.puts "ref #{ref}"
+#        @trace_file.puts "ref #{ref}"
         result.return_objectpath ref
       end
       result.done
