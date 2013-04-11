@@ -45,10 +45,9 @@ module Cmpi
 	end
         # Set key properties
  
-        # already set via reference
-        # result.CSCreationClassName = cs_CreationClassName
- 	# result.CSName = cs_Name
- 
+        result.CSCreationClassName = cs_CreationClassName
+ 	result.CSName = cs_Name
+
         result.OSCreationClassName = os_CreationClassName
         result.OSName = os_Name
 
