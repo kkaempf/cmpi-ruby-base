@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Apr 11 08:39:29 UTC 2013 - kkaempf@suse.com
+
+- update to 0.2.1
+  RCP_ComputerSystem: improve os detection
+  RCP_OSProcess: fix namespace to root/suse
+
+-------------------------------------------------------------------
 Tue Apr  9 14:03:29 UTC 2013 - kkaempf@suse.com
 
 - update to 0.2.0
