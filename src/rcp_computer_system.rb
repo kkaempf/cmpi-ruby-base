@@ -21,7 +21,7 @@ module Cmpi
     def each( reference, properties = nil, want_instance = false )
 #      require 'socket'
 
-      result = Cmpi::CMPIObjectPath.new reference.namespace, reference.classname
+      result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_ComputerSystem"
       if want_instance
 	result = Cmpi::CMPIInstance.new result
         if properties
