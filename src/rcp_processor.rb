@@ -53,11 +53,9 @@ module Cmpi
 	    if device_id
 	      next unless device_id == v
 	    end
+	    result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_Processor"
 	    if want_instance
-	      result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_Processor"
 	      result = Cmpi::CMPIInstance.new result
-	    else
-	      result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_Processor"
 	    end
 	    result.SystemCreationClassName = "RCP_Processor"
             # this fails if hostname can't be resolved 
